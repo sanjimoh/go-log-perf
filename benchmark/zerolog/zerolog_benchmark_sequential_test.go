@@ -7,29 +7,46 @@ import (
 	"github.com/rs/zerolog"
 )
 
-var (
-	zeroLogger = NewZeroLogger()
-)
-
-func NewZeroLogger() *zerolog.Logger {
-	output := zerolog.ConsoleWriter{Out: io.Discard}
-	logger := zerolog.New(output).With().Caller().Logger()
-	return &logger
-}
-
-func BenchmarkZeroLog(b *testing.B) {
+func BenchmarkZeroLogInfoSeq(b *testing.B) {
+	zeroLogger := zerolog.New(io.Discard).Level(zerolog.InfoLevel)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		zeroLogger.Info().Msg("benchmark message")
 	}
 }
 
-func BenchmarkZeroLogWithFields(b *testing.B) {
+func BenchmarkZeroLogInfoWithTenAttributesWithCtxSeq(b *testing.B) {
+	zeroLogger := zerolog.New(io.Discard).With().Timestamp().Caller().Logger()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		zeroLogger.Info().
-			Str("benchmark", "message").
-			Int("benchmark", 1).
-			Msg("benchmark message")
+			Str("string", TestString).
+			Int("status", TestInt).
+			Dur("duration", TestDuration).
+			Time("time", TestTime).
+			Any("error", TestError).
+			Str("string", TestString).
+			Int("status", TestInt).
+			Dur("duration", TestDuration).
+			Time("time", TestTime).
+			Any("error", TestError)
+	}
+}
+
+func BenchmarkZeroLogInfoWithTenAttributesWithoutCtxSeq(b *testing.B) {
+	zeroLogger := zerolog.New(io.Discard).Level(zerolog.InfoLevel)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		zeroLogger.Info().
+			Str("string", TestString).
+			Int("status", TestInt).
+			Dur("duration", TestDuration).
+			Time("time", TestTime).
+			Any("error", TestError).
+			Str("string", TestString).
+			Int("status", TestInt).
+			Dur("duration", TestDuration).
+			Time("time", TestTime).
+			Any("error", TestError)
 	}
 }

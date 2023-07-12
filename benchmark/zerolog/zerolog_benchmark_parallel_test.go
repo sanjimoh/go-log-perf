@@ -19,32 +19,20 @@ var (
 	TestError    = errors.New("fail")
 )
 
-// Positive Test -> Level is Info , Log is Info
-func BenchmarkZeroLogInfoPositive(t *testing.B) {
+func BenchmarkZeroLogInfoParallel(b *testing.B) {
 	logger := zerolog.New(io.Discard).Level(zerolog.InfoLevel)
-	t.ResetTimer()
-	t.RunParallel(func(pb *testing.PB) {
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			logger.Info().Msg(TestMessage)
 		}
 	})
 }
 
-// Negative Test -> Level is Error , Log is Info
-func BenchmarkZeroLogInfoNegative(t *testing.B) {
-	logger := zerolog.New(io.Discard).Level(zerolog.ErrorLevel)
-	t.ResetTimer()
-	t.RunParallel(func(pb *testing.PB) {
-		for pb.Next() {
-			logger.Info().Msg(TestMessage)
-		}
-	})
-}
-
-func BenchmarkZeroLogTenAttributesWithCtx(t *testing.B) {
+func BenchmarkZeroLogTenAttributesWithCtxParallel(b *testing.B) {
 	logger := zerolog.New(io.Discard).With().Timestamp().Caller().Logger()
-	t.ResetTimer()
-	t.RunParallel(func(pb *testing.PB) {
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			logger.Info().
 				Str("string", TestString).
@@ -61,10 +49,10 @@ func BenchmarkZeroLogTenAttributesWithCtx(t *testing.B) {
 	})
 }
 
-func BenchmarkZeroLogTenAttributesWithoutCtx(t *testing.B) {
+func BenchmarkZeroLogTenAttributesWithoutCtxParallel(b *testing.B) {
 	logger := zerolog.New(io.Discard)
-	t.ResetTimer()
-	t.RunParallel(func(pb *testing.PB) {
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			logger.Info().
 				Str("string", TestString).

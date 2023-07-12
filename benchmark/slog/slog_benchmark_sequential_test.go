@@ -8,27 +8,49 @@ import (
 	"golang.org/x/exp/slog"
 )
 
-var (
-	logger = NewLogger()
-)
-
-func NewLogger() *slog.Logger {
-	globalHandler := slog.NewTextHandler(io.Discard, &slog.HandlerOptions{AddSource: true, Level: slog.LevelInfo})
-	return slog.New(globalHandler)
-}
-
-func BenchmarkGoSLog(b *testing.B) {
+func BenchmarkGoSLogInfoSeq(b *testing.B) {
+	logger := slog.New(slog.NewJSONHandler(io.Discard, &slog.HandlerOptions{AddSource: true, Level: slog.LevelInfo}))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		logger.Info("benchmark message")
+		logger.Info(TestMessage)
 	}
 }
 
-func BenchmarkGoSLogWithFields(b *testing.B) {
+func BenchmarkGoSLogInfoWithTenAttributesWithCtxSeq(b *testing.B) {
+	ctx := context.Background()
+	logger := slog.New(slog.NewJSONHandler(io.Discard, &slog.HandlerOptions{AddSource: true, Level: slog.LevelInfo}))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		logger.LogAttrs(context.Background(), slog.LevelInfo, "benchmark message",
-			slog.String("benchmark", "message"),
-			slog.Int("benchmark", 1))
+		logger.LogAttrs(ctx, slog.LevelInfo, TestMessage,
+			slog.String("string", TestString),
+			slog.Int("status", TestInt),
+			slog.Duration("duration", TestDuration),
+			slog.Time("time", TestTime),
+			slog.Any("error", TestError),
+			slog.String("string", TestString),
+			slog.Int("status", TestInt),
+			slog.Duration("duration", TestDuration),
+			slog.Time("time", TestTime),
+			slog.Any("error", TestError),
+		)
+	}
+}
+
+func BenchmarkGoSLogInfoWithTenAttributesWithoutCtxSeq(b *testing.B) {
+	logger := slog.New(slog.NewJSONHandler(io.Discard, &slog.HandlerOptions{AddSource: true, Level: slog.LevelInfo}))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		logger.LogAttrs(nil, slog.LevelInfo, TestMessage,
+			slog.String("string", TestString),
+			slog.Int("status", TestInt),
+			slog.Duration("duration", TestDuration),
+			slog.Time("time", TestTime),
+			slog.Any("error", TestError),
+			slog.String("string", TestString),
+			slog.Int("status", TestInt),
+			slog.Duration("duration", TestDuration),
+			slog.Time("time", TestTime),
+			slog.Any("error", TestError),
+		)
 	}
 }
