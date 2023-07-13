@@ -1,5 +1,6 @@
 # go-log-perf
 
+## Introduction
 Performance benchmarking of go based logging libraries. Right now results include -
 - [slog](https://pkg.go.dev/golang.org/x/exp/slog) 
 - [zerolog](https://github.com/rs/zerolog)
@@ -9,12 +10,14 @@ The tests include running sequential as well as parallel benchmark runs, each co
 - Logging with 10 attributes with Context
 - Logging with 10 attributes without Context
 
+## Benchmark Tests
 Benchmark tests are located over here -
 - [slog](./benchmark/slog)
 - [zerolog](./benchmark/zerolog)
 
-## slog
+## Benchmark Results
 
+### slog
 `$ go test -bench=. -benchmem -benchtime 1000000x -cpu=1,2,4`
 
 | goos   | goarch | pkg                                   | cpu                                       |
@@ -43,8 +46,7 @@ Benchmark tests are located over here -
 | BenchmarkSlogTenAttributesWithoutCtxParallel-2      | 1000000              | 4770 ns/op                                  | 776 B/op                                                   | 7 allocs/op                                            |
 | BenchmarkSlogTenAttributesWithoutCtxParallel-4      | 1000000              | 2872 ns/op                                  | 776 B/op                                                   | 7 allocs/op                                            |
 
-## zerolog
-
+### zerolog
 `$ go test -bench=. -benchmem -benchtime 1000000x -cpu=1,2,4`
 
 | goos   | goarch | pkg                                      | cpu                                       |
