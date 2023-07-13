@@ -1,5 +1,14 @@
 # go-log-perf
 
+Performance benchmarking of go based logging libraries. Right now results include -
+- [slog](./benchmark/slog) 
+- [zerolog](./benchmark/zerolog)
+
+The tests include running sequential as well as parallel benchmark runs, each covering following scenarios -
+- An info level logging use case
+- Logging with 10 attributes with Context
+- Logging with 10 attributes without Context
+
 ## slog
 
 `$ go test -bench=. -benchmem -benchtime 1000000x -cpu=1,2,4`
